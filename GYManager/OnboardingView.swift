@@ -12,6 +12,7 @@ struct OnboardingPage: Identifiable {
     let title: String
     let description: String
     let imageName: String
+    let showHighlight: Bool
 }
 
 struct OnboardingView: View {
@@ -21,17 +22,20 @@ struct OnboardingView: View {
         OnboardingPage(
             title: "Bem-vindo ao GYManager!",
             description: "Organize seus treinos e acompanhe sua evolução de forma simples e eficiente",
-            imageName: "figure.run"
+            imageName: "figure.run",
+            showHighlight: true
         ),
         OnboardingPage(
             title: "Crie seus Treinos",
             description: "Monte treinos personalizados com nossa biblioteca de exercícios",
-            imageName: "dumbbell.fill"
+            imageName: "dumbbell.fill",
+            showHighlight: false
         ),
         OnboardingPage(
             title: "Aproveite nosso GYM Timer",
             description: "Aumente a efetividade utilizando um timer personalizado no momento do seu treino",
-            imageName: "chart.line.uptrend.xyaxis"
+            imageName: "chart.line.uptrend.xyaxis",
+            showHighlight: false
         )
     ]
     
@@ -46,10 +50,20 @@ struct OnboardingView: View {
                         .foregroundColor(.blue)
                         .padding()
                     
-                    Text(pages[index].title)
-                        .font(.title)
-                        .bold()
-                        .multilineTextAlignment(.center)
+                    if pages[index].showHighlight {
+                        Text("Bem-vindo ao ")
+                            .font(.title)
+                            .bold() +
+                        Text("GYManager")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(Color("PrimaryColor"))
+                    } else {
+                        Text(pages[index].title)
+                            .font(.title)
+                            .bold()
+                            .multilineTextAlignment(.center)
+                    }
                     
                     Text(pages[index].description)
                         .font(.body)
@@ -65,7 +79,7 @@ struct OnboardingView: View {
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .frame(width: 200, height: 50)
-                                .background(Color.blue)
+                                .background(Color("PrimaryColor"))
                                 .cornerRadius(10)
                         }
                         .padding(.top)
