@@ -35,7 +35,7 @@ struct OnboardingView: View {
         OnboardingPage(
             title: "Aproveite nosso GYM Timer",
             description: "Aumente a efetividade utilizando um timer personalizado no momento do seu treino",
-            imageName: "resultados",
+            imageName: "timer",
             showHighlight: false
         )
     ]
@@ -103,7 +103,7 @@ struct OnboardingView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     if currentPage < pages.count - 1 {
-                        NavigationLink(destination: Text("Next view")
+                        NavigationLink(destination: AuthenticationView()
                             .navigationBarBackButtonHidden(true)) {
                                 Text("Pular")
                                     .font(.subheadline)
@@ -111,6 +111,7 @@ struct OnboardingView: View {
                         }
                     }
                 }
+                
             }
             .navigationBarTitleDisplayMode(.inline)
         }
