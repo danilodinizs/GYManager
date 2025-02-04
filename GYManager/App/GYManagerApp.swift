@@ -1,16 +1,10 @@
-//
-//  GYManagerApp.swift
-//  GYManager
-//
-//  Created by Danilo Diniz on 15/01/25.
-//
-
 import SwiftUI
 import FirebaseCore
 
 @main
 struct GYManagerApp: App {
     let persistenceController = PersistenceController.shared
+    @StateObject private var authManager = AuthenticationManager()
     
     init() {
         FirebaseApp.configure()
@@ -20,6 +14,7 @@ struct GYManagerApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(authManager) // Se precisar acessar globalmente
         }
     }
 }
