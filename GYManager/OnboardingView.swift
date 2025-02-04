@@ -1,10 +1,3 @@
-//
-//  OnboardingView.swift
-//  GYManager
-//
-//  Created by Danilo Diniz on 15/01/25.
-//
-
 import SwiftUI
 
 struct OnboardingPage: Identifiable {
@@ -42,80 +35,129 @@ struct OnboardingView: View {
     
     var body: some View {
         NavigationStack {
-            TabView(selection: $currentPage) {
-                ForEach(0..<pages.count, id: \.self) { index in
-                    VStack(spacing: 20) {
-                        Image(pages[index].imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 200, height: 200)
-                            .clipShape(Circle())
-                            .overlay(
-                                Circle()
-                                    .stroke(Color("GYManagerPrimary"), lineWidth: 4)
-                            )
-                            .shadow(radius: 10)
-                            .padding()
-        
-                        
-                        if pages[index].showHighlight {
-                            Text("Bem-vindo ao ")
-                                .font(.title)
-                                .bold() +
-                            Text("GYManager")
-                                .font(.title)
-                                .bold()
-                                .foregroundColor(Color("GYManagerPrimary"))
-
-                        } else {
-                            Text(pages[index].title)
-                                .font(.title)
-                                .bold()
-                                .multilineTextAlignment(.center)
-                        }
-                        
-                        Text(pages[index].description)
-                            .font(.body)
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal)
-                        
-                        if index == pages.count - 1 {
-                            Button(action: {
-                                
-                            }) {
-                                Text("Começar")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .frame(width: 200, height: 50)
-                                    .background(Color("GYManagerPrimary"))
-                                    .cornerRadius(10)
+            ZStack {
+                Color("GYManagerSecondary")
+                    .opacity(0.05)
+                    .ignoresSafeArea()
+                
+                TabView(selection: $currentPage) {
+                    ForEach(0..<pages.count, id: \.self) { index in
+                        VStack(spacing: 30) {
+                            Spacer()
+                            
+                            imageSection(index: index)
+                            
+                            textSection(index: index)
+                            
+                            Spacer()
+                            
+                            if index == pages.count - 1 {
+                                finalButton()
                             }
-                            .padding(.top)
+                            
+                            pageIndicators()
+                                .padding(.bottom, 20)
                         }
+                        .tag(index)
+                        .padding()
                     }
-                    .tag(index)
-                    .padding()
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     if currentPage < pages.count - 1 {
                         NavigationLink(destination: AuthenticationView()
                             .navigationBarBackButtonHidden(true)) {
-                                Text("Pular")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
+                            Text("Pular")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(Color("GYManagerPrimary"))
                         }
                     }
                 }
-                
             }
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+    
+    private func imageSection(index: Int) -> some View {
+        Image(pages[index].imageName)
+            .resizable()
+            .scaledToFit()
+            .frame(width: 220, height: 220)
+            .clipShape(Circle())
+            .overlay(
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color("GYManagerPrimary"),
+                                Color("GYManagerPrimary").opacity(0.5)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 4
+                    )
+            )
+            .shadow(color: Color("GYManagerPrimary").opacity(0.2), radius: 15, x: 0, y: 5)
+            .padding()
+    }
+    
+    private func textSection(index: Int) -> some View {
+        VStack(spacing: 20) {
+            if pages[index].showHighlight {
+                Text("Bem-vindo ao ")
+                    .font(.title.bold())
+                    .foregroundColor(Color("GYManagerSecondary")) +
+                Text("GYManager")
+                    .font(.title.bold())
+                    .foregroundColor(Color("GYManagerPrimary"))
+            } else {
+                Text(pages[index].title)
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(Color("GYManagerSecondary"))
+                    .multilineTextAlignment(.center)
+            }
+            
+            Text(pages[index].description)
+                .font(.body)
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color("GYManagerSecondary").opacity(0.8))
+                .padding(.horizontal, 32)
         }
+    }
+    
+    private func finalButton() -> some View {
+        NavigationLink(destination: AuthenticationView()
+            .navigationBarBackButtonHidden(true)) {
+            Text("Começar")
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(Color("GYManagerPrimary"))
+                .cornerRadius(16)
+                .padding(.horizontal, 32)
+                .shadow(color: Color("GYManagerPrimary").opacity(0.3),
+                        radius: 10, x: 0, y: 5)
+        }
+    }
+    
+    private func pageIndicators() -> some View {
+        HStack(spacing: 8) {
+            ForEach(0..<pages.count, id: \.self) { i in
+                Circle()
+                    .fill(currentPage == i ?
+                          Color("GYManagerPrimary") :
+                          Color("GYManagerSecondary").opacity(0.3))
+                    .frame(width: 8, height: 8)
+                    .scaleEffect(currentPage == i ? 1.2 : 1)
+                    .animation(.spring(), value: currentPage)
+            }
+        }
+    }
 }
 
 #Preview {

@@ -82,8 +82,16 @@ struct AuthenticationView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color("GYManagerSecondary"))
-                    .foregroundColor(.black)
+                    .background(Color("GYManagerSecondary")
+                        .colorInvert()
+                        .opacity(0.1)
+                    )
+    
+                    .foregroundColor(Color("GYManagerSecondary"))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color("GYManagerSecondary"), lineWidth: 3)
+                    )
                     .cornerRadius(12)
             }
         }
